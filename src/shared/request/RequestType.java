@@ -1,4 +1,4 @@
-package shared.model.request;
+package shared.request;
 
 public enum RequestType {
     LOGIN,

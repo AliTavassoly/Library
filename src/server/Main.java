@@ -1,8 +1,12 @@
 package server;
 
+import constants.Constants;
+import shared.util.Config;
+
 public class Main {
     public static void main(String[] args) {
-        Server server = new Server(1234); // config
+        Integer port = Config.getConfig().getProperty(Integer.class, "serverPort");
+        Server server = new Server(port);
         server.start();
     }
 }

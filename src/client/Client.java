@@ -1,8 +1,10 @@
 package client;
 
 import client.network.ServerController;
-import shared.model.response.Response;
-import shared.model.response.ResponseStatus;
+import constants.Constants;
+import shared.response.Response;
+import shared.response.ResponseStatus;
+import shared.util.Config;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -27,16 +29,16 @@ public class Client {
             int command = scanner.nextInt();
             scanner.nextLine();
 
-            switch (command) {
-                case 0:
-                    System.exit(0);
-                    break;
-                case 1:
-                    login();
-                    break;
-                case 2:
-                    register();
-                    break;
+            Integer exitCode = Config.getConfig().getProperty(Integer.class, "exitCode");
+            Integer loginCode = Config.getConfig().getProperty(Integer.class, "loginCode");
+            Integer registerCode = Config.getConfig().getProperty(Integer.class, "registerCode");
+
+            if (command == exitCode) {
+                System.exit(0);
+            } else if (command == loginCode) {
+                login();
+            } else if (command == registerCode) {
+                register();
             }
         }
     }

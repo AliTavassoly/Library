@@ -1,4 +1,4 @@
-package util.extra;
+package shared.util.extra;
 
 import java.io.File;
 import java.io.IOException;

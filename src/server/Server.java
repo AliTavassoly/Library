@@ -1,10 +1,12 @@
 package server;
 
+import constants.Constants;
 import server.network.ClientHandler;
-import shared.model.request.Request;
-import shared.model.response.Response;
-import shared.model.response.ResponseStatus;
-import util.extra.Token;
+import shared.request.Request;
+import shared.response.Response;
+import shared.response.ResponseStatus;
+import shared.util.Config;
+import shared.util.Token;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -83,7 +85,8 @@ public class Server {
             response.addData("username", username);
         } else {
             response = new Response(ResponseStatus.ERROR);
-            response.setErrorMessage("Username or password is wrong!");
+            String message = Config.getConfig().getProperty(String.class, "passwordWrongError");
+            response.setErrorMessage(message);
         }
 
         getClientHandler(token).sendResponse(response);
@@ -97,7 +100,8 @@ public class Server {
             response.addData("username", username);
         } else {
             response = new Response(ResponseStatus.ERROR);
-            response.setErrorMessage("Username already exists!");
+            String message = Config.getConfig().getProperty(String.class, "usernameTakenError");
+            response.setErrorMessage(message);
         }
 
         getClientHandler(token).sendResponse(response);

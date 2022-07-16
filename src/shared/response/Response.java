@@ -1,4 +1,4 @@
-package shared.model.response;
+package shared.response;
 
 import java.util.HashMap;
 
@@ -12,6 +12,7 @@ public class Response {
 
     public Response(ResponseStatus status) {
         this.status = status;
+        data = new HashMap<>();
     }
 
     public void setErrorMessage(String errorMessage) {

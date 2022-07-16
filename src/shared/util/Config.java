@@ -1,4 +1,6 @@
-package util;
+package shared.util;
+
+import constants.Constants;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,13 +10,22 @@ import java.util.Optional;
 import java.util.Properties;
 
 public class Config extends Properties {
-    public Config(String address) {
+    private static Config config;
+
+    private Config(String address) {
         try {
             Reader fileReader = new FileReader(address);
             this.load(fileReader);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static Config getConfig() {
+        if (config == null) {
+            config = new Config(Constants.CONFIG_ADDRESS);
+        }
+        return config;
     }
 
     public <E> E getProperty(Class<E> c, String propertyName) {

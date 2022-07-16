@@ -1,12 +1,16 @@
 package client;
 
+import constants.Constants;
+import shared.util.Config;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            Client client = new Client(InetAddress.getLocalHost(), 1234); // config
+            Integer port = Config.getConfig().getProperty(Integer.class, "serverPort");
+            Client client = new Client(InetAddress.getLocalHost(), port);
             client.start();
         } catch (UnknownHostException e) {
             e.printStackTrace();

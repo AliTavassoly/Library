@@ -1,4 +1,4 @@
-package util;
+package shared.util;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonMethod;

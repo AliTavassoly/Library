@@ -1,4 +1,4 @@
-package util.extra;
+package shared.util.extra;
 
 public class Loop {
     private final double fps;

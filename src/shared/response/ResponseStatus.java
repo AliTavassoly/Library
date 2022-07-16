@@ -1,4 +1,4 @@
-package shared.model.response;
+package shared.response;
 
 public enum ResponseStatus {
     OK,

@@ -1,4 +1,4 @@
-package shared.model.request;
+package shared.request;
 
 import java.util.HashMap;
 

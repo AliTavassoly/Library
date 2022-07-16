@@ -1,10 +1,10 @@
 package server.network;
 
 import server.Server;
-import shared.model.request.Request;
+import shared.request.Request;
 import org.codehaus.jackson.map.ObjectMapper;
-import shared.model.response.Response;
-import util.Jackson;
+import shared.response.Response;
+import shared.util.Jackson;
 
 import java.io.IOException;
 import java.io.PrintStream;
