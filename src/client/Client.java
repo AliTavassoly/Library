@@ -1,11 +1,16 @@
 package client;
 
 import client.network.ServerController;
+import shared.model.response.Response;
+import shared.model.response.ResponseStatus;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 public class Client {
+    private Scanner scanner = new Scanner(System.in);
+
     private ServerController serverController;
     private int port;
     InetAddress inetAddress;
@@ -18,22 +23,65 @@ public class Client {
     private void loginCLI() {
         System.out.println("Login:");
 
+        while (true) {
+            int command = scanner.nextInt();
 
+            switch (command) {
+                case 0:
+                    System.exit(0);
+                    break;
+                case 1:
+                    login();
+                    break;
+                case 2:
+                    register();
+                    break;
+            }
+        }
+    }
+
+    private void login(){
+        System.out.print("Username:");
+        String username = scanner.nextLine(); // username
+        System.out.print("Password:");
+        String password = scanner.nextLine(); // password
+
+        Response response = serverController.sendLoginRequest(username, password);
+
+        if (response.getStatus() == ResponseStatus.OK) {
+            mainMenuCLI();
+        } else {
+            System.err.println(response.getErrorMessage());
+        }
+    }
+
+    private void register() {
+        System.out.print("Username:");
+        String username = scanner.nextLine(); // username
+        System.out.print("Password:");
+        String password = scanner.nextLine(); // password
+
+        Response response = serverController.sendRegisterRequest(username, password);
+
+        if (response.getStatus() == ResponseStatus.OK) {
+            mainMenuCLI();
+        } else {
+            System.err.println(response.getErrorMessage());
+        }
     }
 
     private void mainMenuCLI() {
         System.out.println("Main menu:");
-
 
     }
 
     public void start() {
         try {
             serverController = new ServerController(InetAddress.getLocalHost(), port);
-            serverController.connectToServer(); // Handle connection refuse
+            serverController.connectToServer();
             loginCLI();
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Handle connection refuse
         }
     }
 }
