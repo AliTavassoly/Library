@@ -1,9 +1,9 @@
-package other;
+package util.extra;
 
 import java.security.SecureRandom;
 import java.util.Base64;
 
-public class TokenUtil {
+public class Token {
     private final SecureRandom secureRandom = new SecureRandom();
     private final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
 

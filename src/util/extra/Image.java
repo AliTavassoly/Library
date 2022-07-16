@@ -1,11 +1,11 @@
-package other;
+package util.extra;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Base64;
 
-public class ImageUtil {
+public class Image {
     public static String encode(String path) {
         if (path != null) {
             File image = new File(path);

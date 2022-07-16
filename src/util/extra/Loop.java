@@ -1,12 +1,12 @@
-package other;
+package util.extra;
 
-public class LoopUtil {
+public class Loop {
     private final double fps;
     protected Thread thread;
     private final Runnable updatable;
     private volatile boolean running;
 
-    public LoopUtil(double fps, Runnable updatable) {
+    public Loop(double fps, Runnable updatable) {
         this.fps = fps;
         this.updatable = updatable;
         running = false;
