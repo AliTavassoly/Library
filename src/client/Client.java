@@ -41,9 +41,7 @@ public class Client {
     }
 
     private void login(){
-        System.out.print("Username:");
         String username = scanner.nextLine(); // username
-        System.out.print("Password:");
         String password = scanner.nextLine(); // password
 
         Response response = serverController.sendLoginRequest(username, password);
@@ -56,9 +54,7 @@ public class Client {
     }
 
     private void register() {
-        System.out.print("Username:");
         String username = scanner.nextLine(); // username
-        System.out.print("Password:");
         String password = scanner.nextLine(); // password
 
         Response response = serverController.sendRegisterRequest(username, password);
