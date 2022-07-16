@@ -25,6 +25,7 @@ public class Client {
 
         while (true) {
             int command = scanner.nextInt();
+            scanner.nextLine();
 
             switch (command) {
                 case 0:
