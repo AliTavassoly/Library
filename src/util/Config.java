@@ -8,45 +8,33 @@ import java.util.Optional;
 import java.util.Properties;
 
 public class Config extends Properties {
-    public Config(String address)
-    {
-        try
-        {
+    public Config(String address) {
+        try {
             Reader fileReader = new FileReader(address);
             this.load(fileReader);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public <E> E getProperty(Class<E> c, String propertyName)
-    {
+    public <E> E getProperty(Class<E> c, String propertyName) {
         return getObject(c, getProperty(propertyName));
     }
 
-    public <E> Optional<E> getOptionalProperty(Class<E> c, String propertyName)
-    {
-        if (containsKey(propertyName))
-        {
+    public <E> Optional<E> getOptionalProperty(Class<E> c, String propertyName) {
+        if (containsKey(propertyName)) {
             return Optional.of(getObject(c, getProperty(propertyName)));
-        }
-        else
-        {
+        } else {
             return Optional.empty();
         }
     }
 
     private <E> E getObject(Class<E> c, String value) {
         E e = null;
-        try
-        {
+        try {
             Constructor<E> constructor = c.getConstructor(String.class);
             e = constructor.newInstance(value);
-        }
-        catch (ReflectiveOperationException reflectiveOperationException)
-        {
+        } catch (ReflectiveOperationException reflectiveOperationException) {
             reflectiveOperationException.printStackTrace();
         }
         return e;
