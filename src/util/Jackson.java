@@ -35,7 +35,7 @@ public class Jackson {
             ArrayList<Object> fromJacksonBooks = objectMapper.readValue(string, ArrayList.class);
             System.out.println(fromJacksonBooks);
 
-             Book bookFromList = (Book) fromJacksonBooks.get(0);
+            Book bookFromList = (Book) fromJacksonBooks.get(0);
         } catch (IOException e) {
             e.printStackTrace();
         }
