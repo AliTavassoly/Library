@@ -1,6 +1,5 @@
 package server;
 
-import constants.Constants;
 import shared.util.Config;
 
 public class Main {

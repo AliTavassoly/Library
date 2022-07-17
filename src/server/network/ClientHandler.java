@@ -16,29 +16,23 @@ public class ClientHandler {
     private Scanner scanner;
 
     private ObjectMapper objectMapper;
+    private final Server server;
 
-    private Server server;
+    private final int clientId;
 
-    private String token;
-
-    public ClientHandler(String token, Server server, Socket socket) {
-        this.token = token;
+    public ClientHandler(int clientId, Server server, Socket socket) {
+        this.clientId = clientId;
         this.server = server;
 
         try {
             printStream = new PrintStream(socket.getOutputStream());
             scanner = new Scanner(socket.getInputStream());
-
             objectMapper = Jackson.getNetworkObjectMapper();
 
             makeListenerThread();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public String getToken() {
-        return token;
     }
 
     private void makeListenerThread() {
@@ -57,7 +51,7 @@ public class ClientHandler {
     }
 
     private void handleRequest(Request request) {
-        server.handleRequest(token, request);
+        server.handleRequest(clientId, request);
     }
 
     public void sendResponse(Response response) {
@@ -68,5 +62,9 @@ public class ClientHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getId() {
+        return clientId;
     }
 }

@@ -1,12 +1,10 @@
 package server;
 
-import constants.Constants;
 import server.network.ClientHandler;
 import shared.request.Request;
 import shared.response.Response;
 import shared.response.ResponseStatus;
 import shared.util.Config;
-import shared.util.Token;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -14,20 +12,40 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Server {
-    private ServerSocket serverSocket;
-    private int port;
+    private final ArrayList<ClientHandler> clients; // All of clients
+    private static int clientCount = 0;
 
+    private ServerSocket serverSocket;
     private Library library;
 
-    private ArrayList<ClientHandler> clients; // All of clients
-
-    private Token tokenGenerator;
+    private final int port;
+    private boolean running;
 
     public Server(int port) {
         this.port = port;
-        this.tokenGenerator = new Token();
-
         clients = new ArrayList<>();
+    }
+
+    public void start() {
+        try {
+            serverSocket = new ServerSocket(port);
+            running = true;
+
+            initializeLibrary();
+            listenForNewConnection();
+        } catch (IOException e) {
+            e.printStackTrace(); // Failed to run the server
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void stop() {
+        try {
+            serverSocket.close();
+            running = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initializeLibrary() {
@@ -36,10 +54,11 @@ public class Server {
     }
 
     private void listenForNewConnection() {
-        while (true) {
+        while (running) {
             try {
+                clientCount++;
                 Socket socket = serverSocket.accept();
-                ClientHandler clientHandler = new ClientHandler(tokenGenerator.generateToken(), this, socket);
+                ClientHandler clientHandler = new ClientHandler(clientCount, this, socket);
                 clients.add(clientHandler);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -47,37 +66,44 @@ public class Server {
         }
     }
 
-    public void clientDisconnected() {
-        // Remove from list
+    @SuppressWarnings("unused")
+    public void clientDisconnected(ClientHandler clientHandler) {
+        // Remove client from clients
+        clients.remove(clientHandler);
     }
 
-    public void handleRequest(String token, Request request) {
+    public void handleRequest(int clientId, Request request) {
         System.out.println(request);
-
-        Boolean result;
-
+        boolean result;
         switch (request.getRequestType()) {
-            case LOGIN:
+            case LOGIN -> {
                 result = library.login((String) request.getData("username"), (String) request.getData("password"));
-                sendLoginResponse(token, result, (String) request.getData("username"));
-                break;
-            case REGISTER:
+                sendLoginResponse(clientId, result, (String) request.getData("username"));
+            }
+            case REGISTER -> {
                 result = library.register((String) request.getData("username"), (String) request.getData("password"));
-                sendRegisterResponse(token, result, (String) request.getData("username"));
-                break;
+                sendRegisterResponse(clientId, result, (String) request.getData("username"));
+            }
         }
     }
 
-    private ClientHandler getClientHandler(String token) {
+    private ClientHandler getClientHandler(int clientId) {
         for(ClientHandler clientHandler: clients) {
-            if (clientHandler.getToken().equals(token)) {
+            if (clientHandler.getId() == clientId) {
                 return clientHandler;
             }
         }
         return null;
     }
 
-    private void sendLoginResponse(String token, Boolean result, String username) {
+    private void findClientAndSendResponse(int clientId, Response response) {
+        ClientHandler clientHandler = getClientHandler(clientId);
+        if (clientHandler != null) {
+            clientHandler.sendResponse(response);
+        }
+    }
+
+    private void sendLoginResponse(int clientId, Boolean result, String username) {
         Response response;
 
         if (result) {
@@ -89,10 +115,10 @@ public class Server {
             response.setErrorMessage(message);
         }
 
-        getClientHandler(token).sendResponse(response);
+        findClientAndSendResponse(clientId, response);
     }
 
-    private void sendRegisterResponse(String token, Boolean result, String username) {
+    private void sendRegisterResponse(int clientId, Boolean result, String username) {
         Response response;
 
         if (result) {
@@ -104,18 +130,6 @@ public class Server {
             response.setErrorMessage(message);
         }
 
-        getClientHandler(token).sendResponse(response);
-    }
-
-    public void start() {
-        try {
-            serverSocket = new ServerSocket(port);
-
-            initializeLibrary();
-
-            listenForNewConnection();
-        } catch (IOException e) {
-            e.printStackTrace(); // Failed to run the server
-        }
+        findClientAndSendResponse(clientId, response);
     }
 }

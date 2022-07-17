@@ -13,25 +13,21 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class ServerController {
-    private Socket socket;
     private PrintStream printStream;
     private Scanner scanner;
 
-    private InetAddress inetAddress;
-    private int port;
+    private final int port;
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    public ServerController(InetAddress inetAddress, int port) {
-        this.inetAddress = inetAddress;
+    public ServerController(int port) {
         this.port = port;
-
         objectMapper = Jackson.getNetworkObjectMapper();
     }
 
     public void connectToServer() {
         try {
-            socket = new Socket(InetAddress.getLocalHost(), port);
+            Socket socket = new Socket(InetAddress.getLocalHost(), port);
             printStream = new PrintStream(socket.getOutputStream());
             scanner = new Scanner(socket.getInputStream());
         } catch (IOException e) {

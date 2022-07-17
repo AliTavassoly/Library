@@ -1,4 +1,4 @@
-package shared.util;
+package shared.util.extra;
 
 import java.security.SecureRandom;
 import java.util.Base64;

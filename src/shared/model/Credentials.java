@@ -1,7 +1,8 @@
 package shared.model;
 
 public class Credentials {
-    private String username, password;
+    private final String username;
+    private final String password;
 
     public Credentials(String username, String password) {
         this.username = username;

@@ -1,29 +1,30 @@
 package client;
 
 import client.network.ServerController;
-import constants.Constants;
 import shared.response.Response;
 import shared.response.ResponseStatus;
 import shared.util.Config;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class Client {
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
     private ServerController serverController;
-    private int port;
-    InetAddress inetAddress;
+    private final int port;
 
-    public Client(InetAddress inetAddress, int port) {
-        this.inetAddress = inetAddress;
+    public Client(int port) {
         this.port = port;
     }
 
+    public void start() {
+        serverController = new ServerController(port);
+        serverController.connectToServer();
+        loginCLI();
+    }
+
     private void loginCLI() {
-        System.out.println("Login:");
+        System.out.println("Login Page:");
 
         while (true) {
             int command = scanner.nextInt();
@@ -70,17 +71,6 @@ public class Client {
     }
 
     private void mainMenuCLI() {
-        System.out.println("Main menu:");
-
-    }
-
-    public void start() {
-        try {
-            serverController = new ServerController(InetAddress.getLocalHost(), port);
-            serverController.connectToServer();
-            loginCLI();
-        } catch (UnknownHostException e) {
-            e.printStackTrace(); // Handle connection refuse
-        }
+        System.out.println("Main Menu Page:");
     }
 }
